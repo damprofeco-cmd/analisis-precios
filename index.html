@@ -40,6 +40,112 @@
  <p>
      <iframe title="Promedio mensual" aria-label="Line chart" id="datawrapper-chart-5R1PV" src="https://datawrapper.dwcdn.net/5R1PV/2/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="396" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
  </p>
+
+
+<div id="indicador-gauge"></div>
+
+<script>
+  // ===== VARIABLES QUE PUEDES CAMBIAR =====
+  const valor = 72;  // Número de 0 a 100
+  const color = "V"; // R = rojo, V = verde, A = amarillo
+  // =======================================
+
+  (function () {
+    const colores = {
+      R: "#ff405b",
+      V: "#10c5aa",
+      A: "#ffcf4d"
+    };
+
+    const porcentaje = Math.max(0, Math.min(100, Number(valor) || 0));
+    const colorElegido = colores[String(color).toUpperCase()] || colores.V;
+
+    const radio = 75;
+    const longitud = Math.PI * radio;
+    const avance = longitud * porcentaje / 100;
+
+    // Ángulo de la aguja: de izquierda a derecha
+    const angulo = Math.PI - (porcentaje / 100) * Math.PI;
+    const x = 100 + 58 * Math.cos(angulo);
+    const y = 110 - 58 * Math.sin(angulo);
+
+    document.getElementById("indicador-gauge").innerHTML = `
+      <style>
+        #indicador-gauge {
+          width: 280px;
+          max-width: 100%;
+          font-family: Arial, sans-serif;
+          text-align: center;
+          color: #263238;
+        }
+
+        #indicador-gauge svg {
+          display: block;
+          width: 100%;
+          height: auto;
+        }
+
+        #indicador-gauge .valor {
+          font-size: 23px;
+          font-weight: bold;
+          fill: #263238;
+        }
+
+        #indicador-gauge .escala {
+          font-size: 10px;
+          fill: #45515a;
+        }
+      </style>
+
+      <svg viewBox="0 0 200 145"
+           role="img"
+           aria-label="Indicador: ${porcentaje}%">
+
+        <!-- Arco de fondo -->
+        <path d="M 25 110 A 75 75 0 0 1 175 110"
+          fill="none"
+          stroke="#e8edf0"
+          stroke-width="22"
+          stroke-linecap="butt"/>
+
+        <!-- Arco de progreso -->
+        <path d="M 25 110 A 75 75 0 0 1 175 110"
+          fill="none"
+          stroke="${colorElegido}"
+          stroke-width="22"
+          stroke-linecap="butt"
+          stroke-dasharray="${avance} ${longitud}"/>
+
+        <!-- Aguja -->
+        <line x1="100" y1="110"
+          x2="${x}" y2="${y}"
+          stroke="${colorElegido}"
+          stroke-width="7"
+          stroke-linecap="round"/>
+
+        <!-- Centro de la aguja -->
+        <circle cx="100" cy="110" r="6"
+          fill="${colorElegido}"/>
+
+        <!-- Etiquetas de escala -->
+        <text x="8" y="105" class="escala">0</text>
+        <text x="8" y="91" class="escala">0%</text>
+        <text x="100" y="25" text-anchor="middle"
+          class="escala">50%</text>
+        <text x="192" y="91" text-anchor="end"
+          class="escala">100%</text>
+
+        <!-- Valor -->
+        <text x="100" y="139"
+          text-anchor="middle"
+          class="valor">${porcentaje}%</text>
+      </svg>
+    `;
+  })();
+</script>
+
+
+
     
 </body>
 </html>
